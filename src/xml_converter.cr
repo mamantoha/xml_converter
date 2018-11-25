@@ -77,10 +77,12 @@ class XMLConverter
   private def merge!(hash, key : String, value : Type)
     if hash[key]?
       if hash[key].is_a?(Array)
-        # TODO
+        hash[key].as(Array) << value
       else
         hash[key] = [hash[key], value] of Type
       end
+    elsif value.is_a?(Array)
+      # TODO?
     else
       hash[key] = value
     end
@@ -97,7 +99,6 @@ class XMLConverter
       hash
     else
       merge_texts!(hash, element)
-      hash
     end
   end
 

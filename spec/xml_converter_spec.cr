@@ -9,10 +9,13 @@ describe XMLConverter do
 
     xml = XML.parse(str)
     hash = Hash.from_xml(xml)
-    hash.should eq({"hash" => {"__content__" => "text"}})
+
+    hash.should eq(
+      {"hash" => {"__content__" => "text"}}
+    )
   end
 
-  it "converts with nested attributes" do
+  it "converts with nested elements" do
     str = <<-XML
       <?xml version="1.0" encoding="UTF-8"?>
         <hash>
@@ -23,10 +26,30 @@ describe XMLConverter do
 
     xml = XML.parse(str)
     hash = Hash.from_xml(xml)
-    hash.should eq({"hash" => {"foo" => {"type" => "integer", "__content__" => "1"}, "bar" => {"type" => "integer", "__content__" => "2"}}})
+
+    hash.should eq(
+      {"hash" => {"foo" => {"type" => "integer", "__content__" => "1"}, "bar" => {"type" => "integer", "__content__" => "2"}}}
+    )
   end
 
-  it "converts with array" do
+  it "converts array" do
+    str = <<-XML
+      <numbers>
+        <value>1</value>
+        <value>2</value>
+        <value>3</value>
+      </numbers>
+    XML
+
+    xml = XML.parse(str)
+    hash = Hash.from_xml(xml)
+
+    hash.should eq(
+      {"numbers" => {"value" => [{"__content__" => "1"}, {"__content__" => "2"}, {"__content__" => "3"}]}}
+    )
+  end
+
+  it "converts array with attributes" do
     str = <<-XML
       <settings>
         <servers>
@@ -38,6 +61,9 @@ describe XMLConverter do
 
     xml = XML.parse(str)
     hash = Hash.from_xml(xml)
-    hash.should eq({"settings" => {"servers" => {"server" => [{"url" => "1"}, {"url" => "2"}]}}})
+
+    hash.should eq(
+      {"settings" => {"servers" => {"server" => [{"url" => "1"}, {"url" => "2"}]}}}
+    )
   end
 end
