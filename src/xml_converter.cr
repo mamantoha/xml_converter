@@ -1,12 +1,34 @@
 require "xml"
 
+# A string is blank if it's empty or contains whitespaces only:
+#
+# ```crystal
+# "".blank?       # => true
+# "   ".blank?    # => true
+# "\t\n\r".blank? # => true
+# " blah ".blank? # => false
+# ```
+class String
+  def blank? : Bool
+    empty? || /\A[[:space:]]*\z/.match(self) ? true : false
+  end
+end
+
 struct XML::Node
   def elements
     children.select(&.element?)
   end
 
+  def texts
+    children.select(&.text?)
+  end
+
   def has_elements?
     !elements.empty?
+  end
+
+  def has_text?
+    true
   end
 end
 
@@ -20,6 +42,8 @@ class XMLConverter
   VERSION = "0.1.0"
 
   alias Type = String | Hash(String, Type)
+
+  CONTENT_KEY = "__content__"
 
   def initialize(xml : XML::Node)
     @xml = xml
@@ -58,10 +82,28 @@ class XMLConverter
 
     if element.has_elements?
       element.elements.each { |child| merge_element!(hash, child) }
+      merge_texts!(hash, element) unless empty_content?(element)
+      hash
     else
+      merge_texts!(hash, element)
+      hash
     end
+  end
 
-    hash
+  private def merge_texts!(hash, element)
+    unless element.has_text?
+      hash
+    else
+      texts = String::Builder.build do |io|
+        element.texts.each { |text| io << text.text }
+      end.to_s
+
+      merge!(hash, CONTENT_KEY, texts)
+    end
+  end
+
+  private def empty_content?(element : XML::Node)
+    element.texts.join.blank?
   end
 
   private def get_attributes(element : XML::Node)
