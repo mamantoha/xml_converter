@@ -1,38 +1,44 @@
 require "xml"
 
-# A string is blank if it's empty or contains whitespaces only:
-#
-# ```crystal
-# "".blank?       # => true
-# "   ".blank?    # => true
-# "\t\n\r".blank? # => true
-# " blah ".blank? # => false
-# ```
 class String
+  # A string is blank if it's empty or contains whitespaces only:
+  #
+  # ```crystal
+  # "".blank?       # => true
+  # "   ".blank?    # => true
+  # "\t\n\r".blank? # => true
+  # " blah ".blank? # => false
+  # ```
   def blank? : Bool
     empty? || /\A[[:space:]]*\z/.match(self) ? true : false
   end
 end
 
 struct XML::Node
+  # Get an array of all Element children.
   def elements
     children.select(&.element?)
   end
 
+  # Get an array of all Text children.
   def texts
     children.select(&.text?)
   end
 
-  def has_elements?
+  # Evaluates to `true` if this element has at least one child Element
+  def has_elements? : Bool
     !elements.empty?
   end
 
-  def has_text?
-    true
+  # Evaluates to `true` if this element has at least one Text child
+  def has_text? : Bool
+    !texts.empty?
   end
 end
 
 class Hash
+  # Returns a Hash containing a collection of pairs when the key is the node name and the value is
+  # its content.
   def self.from_xml(xml : XML::Node)
     XMLConverter.new(xml).to_h
   end
@@ -41,7 +47,7 @@ end
 class XMLConverter
   VERSION = "0.1.0"
 
-  alias Type = String | Hash(String, Type)
+  alias Type = String | Array(Type) | Hash(String, Type)
 
   CONTENT_KEY = "__content__"
 
@@ -54,6 +60,7 @@ class XMLConverter
   end
 
   private def deep_to_h(xml)
+    # TODO
     parse(xml)
   end
 
@@ -69,7 +76,11 @@ class XMLConverter
 
   private def merge!(hash, key : String, value : Type)
     if hash[key]?
-      hash[key] = value
+      if hash[key].is_a?(Array)
+        # TODO
+      else
+        hash[key] = [hash[key], value] of Type
+      end
     else
       hash[key] = value
     end
