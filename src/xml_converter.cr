@@ -1,19 +1,5 @@
 require "xml"
 
-class String
-  # A string is blank if it's empty or contains whitespaces only:
-  #
-  # ```crystal
-  # "".blank?       # => true
-  # "   ".blank?    # => true
-  # "\t\n\r".blank? # => true
-  # " blah ".blank? # => false
-  # ```
-  def blank? : Bool
-    empty? || /\A[[:space:]]*\z/.match(self) ? true : false
-  end
-end
-
 struct XML::Node
   # Get an array of all Element children.
   def elements
@@ -115,7 +101,7 @@ class XMLConverter
   end
 
   private def empty_content?(element : XML::Node)
-    element.texts.join.blank?
+    element.texts.join.strip.empty?
   end
 
   private def get_attributes(element : XML::Node)
