@@ -19,6 +19,8 @@ end
 class XMLConverter
   VERSION = "0.1.0"
 
+  alias Type = String | Hash(String, Type)
+
   def initialize(xml : XML::Node)
     @xml = xml
   end
@@ -33,7 +35,7 @@ class XMLConverter
 
   private def parse(data : XML::Node)
     if root = data.root
-      merge_element!({} of String => String, root)
+      merge_element!({} of String => Type, root)
     end
   end
 
@@ -41,7 +43,7 @@ class XMLConverter
     merge!(hash, element.name, collapse(element))
   end
 
-  private def merge!(hash, key : String, value)
+  private def merge!(hash, key : String, value : Type)
     if hash[key]?
       hash[key] = value
     else
@@ -59,11 +61,11 @@ class XMLConverter
     else
     end
 
-    hash.to_s
+    hash
   end
 
   private def get_attributes(element : XML::Node)
-    attributes = {} of String => String
+    attributes = {} of String => Type
     element.attributes.each { |attr| attributes[attr.name] = attr.content }
     attributes
   end
