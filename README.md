@@ -30,7 +30,7 @@ XML
 
 document = XML.parse(xml)
 hash = Hash.from_xml(document)
-# => "person" => {"id" => "1", "firstname" => {"__content__" => "Jane"}, "lastname" => {"__content__" => "Doe"}}}
+# => {"person" => {"id" => "1", "firstname" => {"__content__" => "Jane"}, "lastname" => {"__content__" => "Doe"}}}
 ```
 
 ## Contributing
