@@ -10,11 +10,11 @@ Create hashes from XML documents easily.
 
 1. Add the dependency to your `shard.yml`:
 
-    ```yaml
-    dependencies:
-      xml_converter:
-        github: mamantoha/xml_converter
-    ```
+   ```yaml
+   dependencies:
+     xml_converter:
+       github: mamantoha/xml_converter
+   ```
 
 2. Run `shards install`
 
