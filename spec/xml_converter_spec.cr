@@ -66,4 +66,20 @@ describe XMLConverter do
       {"settings" => {"servers" => {"server" => [{"url" => "1"}, {"url" => "2"}]}}}
     )
   end
+
+  it "example from readme" do
+    xml = <<-XML
+      <person id="1">
+        <firstname>Jane</firstname>
+        <lastname>Doe</lastname>
+      </person>
+    XML
+
+    document = XML.parse(xml)
+    hash = Hash.from_xml(document)
+
+    hash.should eq(
+      {"person" => {"id" => "1", "firstname" => {"__content__" => "Jane"}, "lastname" => {"__content__" => "Doe"}}}
+    )
+  end
 end
