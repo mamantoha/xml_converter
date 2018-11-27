@@ -4,6 +4,8 @@
 
 Create hashes from XML documents easily.
 
+`xml_converter` is heavily inspired by [ActiveSupport::XMLConverter](https://api.rubyonrails.org/classes/ActiveSupport/XMLConverter.html).
+
 ## Installation
 
 1. Add the dependency to your `shard.yml`:
