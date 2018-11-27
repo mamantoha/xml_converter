@@ -11,12 +11,12 @@ struct XML::Node
     children.select(&.text?)
   end
 
-  # Evaluates to `true` if this element has at least one child Element
+  # Evaluates to `true` if this element has at least one child Element.
   def has_elements? : Bool
     !elements.empty?
   end
 
-  # Evaluates to `true` if this element has at least one Text child
+  # Evaluates to `true` if this element has at least one Text child.
   def has_text? : Bool
     !texts.empty?
   end
@@ -35,19 +35,11 @@ class XMLConverter
 
   alias Type = String | Array(Type) | Hash(String, Type)
 
-  CONTENT_KEY = "__content__"
-
-  def initialize(xml : XML::Node)
-    @xml = xml
+  def initialize(@xml : XML::Node, @content_key = "__content__")
   end
 
   def to_h
-    deep_to_h(@xml)
-  end
-
-  private def deep_to_h(xml)
-    # TODO
-    parse(xml)
+    parse(@xml)
   end
 
   private def parse(data : XML::Node)
@@ -67,8 +59,6 @@ class XMLConverter
       else
         hash[key] = [hash[key], value] of Type
       end
-    elsif value.is_a?(Array)
-      # TODO?
     else
       hash[key] = value
     end
@@ -89,14 +79,14 @@ class XMLConverter
   end
 
   private def merge_texts!(hash, element)
-    unless element.has_text?
-      hash
-    else
+    if element.has_text?
       texts = String::Builder.build do |io|
         element.texts.each { |text| io << text.text }
       end.to_s
 
-      merge!(hash, CONTENT_KEY, texts)
+      merge!(hash, @content_key, texts)
+    else
+      hash
     end
   end
 
