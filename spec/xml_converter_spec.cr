@@ -82,4 +82,18 @@ describe XMLConverter do
       {"person" => {"id" => "1", "firstname" => {"__content__" => "Jane"}, "lastname" => {"__content__" => "Doe"}}}
     )
   end
+
+  it "allows to set custom content key" do
+    str = <<-XML
+      <?xml version="1.0" encoding="UTF-8"?>
+        <hash>text</hash>
+     XML
+
+    xml = XML.parse(str)
+    hash = XMLConverter.new(xml, "__value__").to_h
+
+    hash.should eq(
+      {"hash" => {"__value__" => "text"}}
+    )
+  end
 end
