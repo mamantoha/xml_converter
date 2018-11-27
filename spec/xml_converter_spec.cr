@@ -8,7 +8,7 @@ describe XMLConverter do
      XML
 
     xml = XML.parse(str)
-    hash = Hash.from_xml(xml)
+    hash = XMLConverter.new(xml).to_h
 
     hash.should eq(
       {"hash" => {"__content__" => "text"}}
@@ -25,7 +25,7 @@ describe XMLConverter do
      XML
 
     xml = XML.parse(str)
-    hash = Hash.from_xml(xml)
+    hash = XMLConverter.new(xml).to_h
 
     hash.should eq(
       {"hash" => {"foo" => {"type" => "integer", "__content__" => "1"}, "bar" => {"type" => "integer", "__content__" => "2"}}}
@@ -42,7 +42,7 @@ describe XMLConverter do
     XML
 
     xml = XML.parse(str)
-    hash = Hash.from_xml(xml)
+    hash = XMLConverter.new(xml).to_h
 
     hash.should eq(
       {"numbers" => {"value" => [{"__content__" => "1"}, {"__content__" => "2"}, {"__content__" => "3"}]}}
@@ -60,7 +60,7 @@ describe XMLConverter do
     XML
 
     xml = XML.parse(str)
-    hash = Hash.from_xml(xml)
+    hash = XMLConverter.new(xml).to_h
 
     hash.should eq(
       {"settings" => {"servers" => {"server" => [{"url" => "1"}, {"url" => "2"}]}}}
@@ -76,7 +76,7 @@ describe XMLConverter do
     XML
 
     document = XML.parse(xml)
-    hash = Hash.from_xml(document)
+    hash = XMLConverter.new(document).to_h
 
     hash.should eq(
       {"person" => {"id" => "1", "firstname" => {"__content__" => "Jane"}, "lastname" => {"__content__" => "Doe"}}}

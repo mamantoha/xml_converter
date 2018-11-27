@@ -29,7 +29,7 @@ xml = <<-XML
 XML
 
 document = XML.parse(xml)
-hash = Hash.from_xml(document)
+hash = XMLConverter.new(document).to_h
 # => {"person" => {"id" => "1", "firstname" => {"__content__" => "Jane"}, "lastname" => {"__content__" => "Doe"}}}
 ```
 

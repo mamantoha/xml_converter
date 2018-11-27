@@ -1,34 +1,5 @@
 require "xml"
-
-struct XML::Node
-  # Get an array of all Element children.
-  def elements
-    children.select(&.element?)
-  end
-
-  # Get an array of all Text children.
-  def texts
-    children.select(&.text?)
-  end
-
-  # Evaluates to `true` if this element has at least one child Element.
-  def has_elements? : Bool
-    !elements.empty?
-  end
-
-  # Evaluates to `true` if this element has at least one Text child.
-  def has_text? : Bool
-    !texts.empty?
-  end
-end
-
-class Hash
-  # Returns a Hash containing a collection of pairs when the key is the node name and the value is
-  # its content.
-  def self.from_xml(xml : XML::Node)
-    XMLConverter.new(xml).to_h
-  end
-end
+require "./ext/xml/node"
 
 class XMLConverter
   VERSION = "0.1.0"
