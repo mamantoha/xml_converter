@@ -55,7 +55,7 @@ class XMLConverter
         element.texts.each { |text| io << text.text }
       end.to_s
 
-      merge!(hash, @content_key, texts)
+      merge!(hash, @content_key, texts.strip)
     else
       hash
     end

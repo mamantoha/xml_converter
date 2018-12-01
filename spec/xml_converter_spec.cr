@@ -32,6 +32,24 @@ describe XMLConverter do
     )
   end
 
+  it "strip content" do
+    str = <<-XML
+      <?xml version="1.0" encoding="UTF-8"?>
+        <hash>
+          <foo>
+            1
+          </foo>
+        </hash>
+     XML
+
+    xml = XML.parse(str)
+    hash = XMLConverter.new(xml).to_h
+
+    hash.should eq(
+      {"hash" => {"foo" => {"__content__" => "1"}}}
+    )
+  end
+
   it "converts array" do
     str = <<-XML
       <numbers>
