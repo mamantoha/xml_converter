@@ -1,4 +1,4 @@
-# xml_converter
+# XMLConverter
 
 [![Build Status](https://travis-ci.org/mamantoha/xml_converter.svg?branch=master)](https://travis-ci.org/mamantoha/xml_converter)
 
@@ -32,7 +32,7 @@ XML
 
 document = XML.parse(xml)
 hash = XMLConverter.new(document).to_h
-# => {"person" => {"id" => "1", "firstname" => {"__content__" => "Jane"}, "lastname" => {"__content__" => "Doe"}}}
+# => {"person" => {"id" => "1", "firstname" => {:value => "Jane"}, "lastname" => {:value => "Doe"}}}
 ```
 
 ## Contributing

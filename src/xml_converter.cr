@@ -4,9 +4,17 @@ require "./ext/xml/node"
 class XMLConverter
   VERSION = "0.1.0"
 
-  alias Type = String | Array(Type) | Hash(String, Type)
+  alias HashKey = String | Symbol
+  alias Type = HashKey | Array(Type) | Hash(HashKey, Type)
 
-  def initialize(@xml : XML::Node, @content_key = "__content__")
+  getter content_key : Symbol
+
+  def initialize(content : String, @content_key = :value)
+    xml = XML.parse(content)
+    initialize(xml, @content_key)
+  end
+
+  def initialize(@xml : XML::Node, @content_key = :value)
   end
 
   def to_h
@@ -15,7 +23,7 @@ class XMLConverter
 
   private def parse(data : XML::Node)
     if root = data.root
-      merge_element!({} of String => Type, root)
+      merge_element!({} of HashKey => Type, root)
     end
   end
 
@@ -23,7 +31,7 @@ class XMLConverter
     merge!(hash, element.name, collapse(element))
   end
 
-  private def merge!(hash, key : String, value : Type)
+  private def merge!(hash, key : HashKey, value : Type)
     if hash[key]?
       if hash[key].is_a?(Array)
         hash[key].as(Array) << value
@@ -66,7 +74,7 @@ class XMLConverter
   end
 
   private def get_attributes(element : XML::Node)
-    attributes = {} of String => Type
+    attributes = {} of HashKey => Type
     element.attributes.each { |attr| attributes[attr.name] = attr.content }
     attributes
   end
