@@ -2,7 +2,7 @@ require "xml"
 require "./ext/xml/node"
 
 class XMLConverter
-  VERSION = "0.1.0"
+  VERSION = "0.2.0"
 
   alias HashKey = String | Symbol
   alias Type = HashKey | Array(Type) | Hash(HashKey, Type)
