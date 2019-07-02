@@ -32,7 +32,7 @@ describe XMLConverter do
     end
   end
 
-  it "converts one element" do
+  it "converts one element with value" do
     str = <<-XML
       <?xml version="1.0" encoding="UTF-8"?>
         <hash>text</hash>
@@ -40,6 +40,20 @@ describe XMLConverter do
 
     xml = XML.parse(str)
     hash = XMLConverter.new(xml).to_h
+
+    hash.should eq(
+      {"hash" => "text"}
+    )
+  end
+
+  it "converts one element with value and not collapse" do
+    str = <<-XML
+      <?xml version="1.0" encoding="UTF-8"?>
+        <hash>text</hash>
+     XML
+
+    xml = XML.parse(str)
+    hash = XMLConverter.new(xml, collapse: false).to_h
 
     hash.should eq(
       {"hash" => {:value => "text"}}
@@ -77,11 +91,11 @@ describe XMLConverter do
     hash = XMLConverter.new(xml).to_h
 
     hash.should eq(
-      {"hash" => {"foo" => {:value => "1"}}}
+      {"hash" => {"foo" => "1"}}
     )
   end
 
-  it "converts array" do
+  context "converts array" do
     str = <<-XML
       <numbers>
         <value>1</value>
@@ -91,11 +105,22 @@ describe XMLConverter do
     XML
 
     xml = XML.parse(str)
-    hash = XMLConverter.new(xml).to_h
 
-    hash.should eq(
-      {"numbers" => {"value" => [{:value => "1"}, {:value => "2"}, {:value => "3"}]}}
-    )
+    it "with collapse" do
+      hash = XMLConverter.new(xml).to_h
+
+      hash.should eq(
+        {"numbers" => {"value" => ["1", "2", "3"]}}
+      )
+    end
+
+    it "without collapse" do
+      hash = XMLConverter.new(xml, collapse: false).to_h
+
+      hash.should eq(
+        {"numbers" => {"value" => [{:value => "1"}, {:value => "2"}, {:value => "3"}]}}
+      )
+    end
   end
 
   it "converts array with attributes" do
@@ -119,8 +144,8 @@ describe XMLConverter do
   it "example from readme" do
     xml = <<-XML
       <person id="1">
-        <firstname>Jane</firstname>
-        <lastname>Doe</lastname>
+        <firstName preferredName="Jane">Jehanne</firstname>
+        <lastName>Doe</lastname>
       </person>
     XML
 
@@ -128,7 +153,7 @@ describe XMLConverter do
     hash = XMLConverter.new(document).to_h
 
     hash.should eq(
-      {"person" => {"id" => "1", "firstname" => {:value => "Jane"}, "lastname" => {:value => "Doe"}}}
+      {"person" => {"id" => "1", "firstName" => {"preferredName" => "Jane", :value => "Jehanne"}, "lastName" => "Doe"}}
     )
   end
 
@@ -139,7 +164,7 @@ describe XMLConverter do
      XML
 
     xml = XML.parse(str)
-    hash = XMLConverter.new(xml, :__value__).to_h
+    hash = XMLConverter.new(xml, content_key: :__value__, collapse: false).to_h
 
     hash.should eq(
       {"hash" => {:__value__ => "text"}}

@@ -1,6 +1,27 @@
 require "xml"
 require "./ext/xml/node"
 
+# Class to convert `XML::Node` or `String` object to `Hash`.
+#
+# Simple example:
+#
+# ```
+# xml = <<-XML
+#   <person id="1">
+#     <firstname>Jane</firstname>
+#     <lastname>Doe</lastname>
+#     </person>
+#   XML
+#
+# document = XML.parse(xml)
+# hash = XMLConverter.new(document, content_key: :_value, collapse: false).to_h
+# => {"person" => {"id" => "1", "firstname" => {:_value => "Jane"}, "lastname" => {:_value => "Doe"}}}
+# ```
+#
+# Options:
+#
+# `content_key` - name for text property for elements with attributes and text
+# `collapse` - collapse elements that only contain text into a simple string property.
 class XMLConverter
   VERSION = "0.2.0"
 
@@ -9,12 +30,12 @@ class XMLConverter
 
   getter content_key : Symbol
 
-  def initialize(content : String, @content_key = :value)
+  def initialize(content : String, @content_key = :value, @collapse = true)
     xml = XML.parse(content)
-    initialize(xml, @content_key)
+    initialize(xml, @content_key, @collapse)
   end
 
-  def initialize(@xml : XML::Node, @content_key = :value)
+  def initialize(@xml : XML::Node, @content_key = :value, @collapse = true)
   end
 
   def to_h
@@ -63,7 +84,11 @@ class XMLConverter
         element.texts.each { |text| io << text.text }
       end.to_s
 
-      merge!(hash, @content_key, texts.strip)
+      if element.has_attributes? || !@collapse
+        merge!(hash, @content_key, texts.strip)
+      else
+        texts.strip
+      end
     else
       hash
     end

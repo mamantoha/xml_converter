@@ -25,14 +25,14 @@ require "xml_converter"
 
 xml = <<-XML
   <person id="1">
-    <firstname>Jane</firstname>
-    <lastname>Doe</lastname>
+    <firstName preferredName="Jane">Jehanne</firstname>
+    <lastName>Doe</lastname>
   </person>
 XML
 
 document = XML.parse(xml)
 hash = XMLConverter.new(document).to_h
-# => {"person" => {"id" => "1", "firstname" => {:value => "Jane"}, "lastname" => {:value => "Doe"}}}
+# => {"person" => {"id" => "1", "firstName" => {"preferredName" => "Jane", :value => "Jehanne"}, "lastName" => "Doe"}}
 ```
 
 ## Contributing

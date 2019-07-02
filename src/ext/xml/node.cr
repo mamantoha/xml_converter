@@ -18,4 +18,9 @@ struct XML::Node
   def has_text? : Bool
     !texts.empty?
   end
+
+  # Evaluates to `true` if this element has at least one attribute.
+  def has_attributes? : Bool
+    !attributes.empty?
+  end
 end
