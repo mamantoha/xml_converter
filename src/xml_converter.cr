@@ -23,7 +23,7 @@ require "./ext/xml/node"
 # `content_key` - name for text property for elements with attributes and text
 # `collapse` - collapse elements that only contain text into a simple string property.
 class XMLConverter
-  VERSION = "0.3.0"
+  VERSION = {{ `shards version #{__DIR__}`.chomp.stringify }}
 
   alias HashKey = String | Symbol
   alias Type = HashKey | Array(Type) | Hash(HashKey, Type)
