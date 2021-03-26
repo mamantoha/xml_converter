@@ -2,8 +2,8 @@ name: xml_converter
 version: 0.3.0
 
 authors:
-  - Anton Maminov <anton.linux@gmail.com>
+  - Anton Maminov <anton.maminov@gmail.com>
 
-crystal: 0.29.0
+crystal: ">= 1.0.0""
 
 license: MIT

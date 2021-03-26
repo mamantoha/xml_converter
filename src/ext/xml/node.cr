@@ -1,4 +1,4 @@
-struct XML::Node
+class XML::Node
   # Get an array of all Element children.
   def elements
     children.select(&.element?)
