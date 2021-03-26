@@ -1,6 +1,6 @@
 # XMLConverter
 
-[![Build Status](https://travis-ci.org/mamantoha/xml_converter.svg?branch=master)](https://travis-ci.org/mamantoha/xml_converter)
+[![CI](https://github.com/mamantoha/xml_converter/actions/workflows/crystal.yml/badge.svg)](https://github.com/mamantoha/xml_converter/actions/workflows/crystal.yml)
 
 Create hashes from XML documents easily.
 
